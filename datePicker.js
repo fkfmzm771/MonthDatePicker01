@@ -1,9 +1,13 @@
 var MONTHS = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
 
 $(function () {
+  // 아래 조건은 서버 시간 설정으로 바꿔준다
   let today = new Date();
 	let year = today.getFullYear(); // 년도
 	let month = today.getMonth() + 1;  // 월
+
+  //페이지 첫 로드시 달을 색으로 표시
+  $('#mrp-selectDate').val(year + '-' + month);
 
   startMonth = month;
   startYear = year - 1;
@@ -18,6 +22,8 @@ $(function () {
   	endDate = parseInt("" + endYear + '0' + endMonth + "");
   else
     endDate = parseInt("" + endYear + endMonth + "");
+
+
 
   content = '<div class="row mpr-calendarholder">';
 
@@ -59,9 +65,10 @@ $(function () {
 
   $(document).on('click','.mpr-month',function(e){
     e.stopPropagation();
-		$month = $(this);
-  	var date = $month.data('month').split('-');
+		$month = $(this).data('month');
+  	var date = $month.split('-');
     $('.mrp-monthdisplay .mrp-selectMonth').html(date[0] + '年'　+ date[1] + '月');
+    $('#mrp-selectDate').val($month);
     $('.mrp-container').popover('hide');
   });
 
@@ -103,11 +110,15 @@ function paintMonths(){
           cDate = parseInt("" + year + (i+1));
         else
           cDate = parseInt("" + year+ '0' + (i+1));
-        // $(this).addClass('mpr-selected');
+        $month = $(this);
+        var date = $month.data('month');
+        var selectDate = $('#mrp-selectDate').val();
+        if (date == selectDate) {
+          $(this).addClass('mpr-selected');
+        }
       });
     });
   $('.mpr-calendar .mpr-month').css("background","");
-
   }
 
   function safeRound(val){
